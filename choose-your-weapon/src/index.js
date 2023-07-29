@@ -6,51 +6,70 @@ class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            computerChoice: -1,
-            userChoice: -1,
+            computerChoice: null,
+            computerChoiceString: null,
+            userChoice: null,
             status: null,
         };
     }
 
-    computerChoiceHandle() {
-        this.setState({computerChoice: Math.floor(Math.random() * 3)});
-        console.log(this.state.computerChoice);
-        return;
+    logic = (userChoice, computerChoice) => {
+        if (computerChoice === userChoice) {
+            this.setState({status: 'nobody wins'});
+            console.log('nobody wins');
+            return 0;
+        }
+        else if ((computerChoice === 0 && userChoice === 1) || (computerChoice === 1 && userChoice === 2) || (computerChoice === 2 && userChoice === 0)) { 
+            this.setState({status: 'Players wins'});
+            console.log('player wins');
+            return 1;
+        }
+        else {
+            this.setState({status: 'Players loses'});
+            console.log('player loses');
+            return -1;
+        }
+
+    }
+
+    computerDecision = (computerChoice) => {
+        if (computerChoice === 0) {
+            this.setState({computerChoiceString: 'Pierre'});
+            return;
+        }
+        else if (computerChoice === 1) {
+            this.setState({computerChoiceString: 'Feuille'});
+            return;
+        }
+        else {
+            this.setState({computerChoiceString: 'Ciseaux'});
+            return;
+        }
     }
     
     handleClick(i) {
-        computerChoiceHandle();
+
+        this.setState({computerChoice: Math.floor(Math.random(3) * 3)});
 
         console.log(this.state.userChoice);
-
+        
         if (i === 'pierre') {
-            console.log('pierre - 1');
-            this.setState({userChoice: 1});
+            this.setState({userChoice: 0});
             
         } else if (i === 'feuille') {
-            console.log('feuille - 2');
-            this.setState({userChoice: 2});
+            this.setState({userChoice: 1});
             
         } else if (i === 'ciseaux') {
-            console.log('ciseaux - 3');
-            this.setState({userChoice: 3});
+            this.setState({userChoice: 2});
             
         }
 
+        this.logic(this.state.userChoice, this.state.computerChoice);
+        this.computerDecision(this.state.computerChoice);
+
+        console.log(this.state.computerChoice);
         console.log(this.state.userChoice);
 
-        if ((this.state.computerChoice === 1 && this.state.userChoice === 2) || (this.state.computerChoice === 2 && this.state.userChoice === 3) || (this.state.computerChoice === 3 && this.state.userChoice === 1)) { 
-            this.setState({status: 'Players wins'});
-            console.log('player wins');
-        }
-        else if ((this.state.computerChoice === 1 && this.state.userChoice === 3) || (this.state.computerChoice === 2 && this.state.userChoice === 1) || (this.state.computerChoice === 3 && this.state.userChoice === 2)) {
-            this.setState({status: 'Players loses'});
-            console.log('player loses');
-        }
-        else if (this.state.computerChoice === this.state.userChoice) {
-            this.setState({status: 'nobody wins'});
-            console.log('nobody wins');
-        }
     }
 
     render() {
@@ -58,20 +77,21 @@ class Game extends React.Component {
             <div className='game'>
                 <h1>Chifoumi</h1>
                 <div className='game-board'>
-                    <h2>Player weapons : </h2>
+                    <h2>Choose your weapon </h2>
                     <button className='weapon' onClick={(i) => this.handleClick('pierre')}>
-                        Pierre
+                    <i className="fa-solid fa-hand-back-fist"></i>
                     </button>
                     <button className='weapon' onClick={(i) => this.handleClick('feuille')}>
-                        Feuille
+                    <i className="fa-solid fa-hand"></i>
                     </button>
                     <button className='weapon' onClick={(i) => this.handleClick('ciseaux')}>
-                        Ciseaux
+                    <i className="fa-solid fa-hand-scissors"></i>
                     </button>
                 </div>
                 <div className='game-info'>
                     <div className='game-result'>
-                
+                        <p>Computer chose {this.state.computerChoiceString}</p>
+                        <p>{this.state.status}</p>
                     </div>
                 </div>
             </div>
